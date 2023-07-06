@@ -45,6 +45,10 @@ class _AlertScreenState extends State<AlertScreen> {
                 hintText: "상황을 자세히 설명해주세요",
               ),
             ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.publish_sharp),
+            )
           ],
         ),
       ),
