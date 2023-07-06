@@ -2,9 +2,10 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-List<String> city = ["감기", "눈병", "피부병", "식중독", "기타"];
-List<String> town = ["감기", "눈병", "피부병", "식중독", "기타"];
-List<String> diseases = ["감기", "눈병", "피부병", "식중독"];
+List<String> city = ["감기", "눈병", "피부", "식중독", "기타"];
+List<String> town = ["감기", "눈병", "피부", "식중독", "기타"];
+List<String> diseases = ["감기", "눈병", "피부염", "천식"];
+// List<String> diseases = ["감기", "눈병", "피부염", "천식", "식중독"];
 
 class StatisticScreen extends StatefulWidget {
   const StatisticScreen({super.key});
@@ -14,25 +15,31 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  List<List<dynamic>> _coldCityData = [];
-  final List<List<dynamic>> _coldTownData = [];
-  final List<List<dynamic>> _EyediseaseCityData = [];
-  final List<List<dynamic>> _EyediseaseTownData = [];
-  final List<List<dynamic>> _SkindiseaseCityData = [];
-  final List<List<dynamic>> _SkindiseaseTownData = [];
-  final List<List<dynamic>> _FoodpoisoningCityData = [];
-  final List<List<dynamic>> _FoodpoisoningTownData = [];
+  late Map<String, Map<String, List<List<dynamic>>>> _data;
+
   late String _city;
   late String _town;
   late bool _isCheckedCold;
   late bool _isCheckedEyedisease;
-  late bool _isCheckedSkindisease;
+  late bool _isCheckedDermatitis;
+  late bool _isCheckedAsthma;
   late bool _isCheckedFoodpoisoning;
 
   void _loadCSV() async {
-    final rawData = await rootBundle.loadString("assets/진료정보_감기_시군구.csv");
-    List<List<dynamic>> listData = const CsvToListConverter().convert(rawData);
-    _coldCityData = listData;
+    _data = {};
+    for (int i = 0; i < diseases.length; i++) {
+      String disease = diseases[i];
+      Map<String, List<List<dynamic>>> temp = {};
+      List<String> type = ["시군구", "시도"];
+      for (int j = 0; j < type.length; j++) {
+        String rawData = await rootBundle
+            .loadString("assets/진료정보_${disease}_${type[j]}.csv");
+        List<List<dynamic>> listData =
+            const CsvToListConverter().convert(rawData);
+        temp[type[j]] = listData;
+      }
+      _data[disease] = temp;
+    }
   }
 
   Future loadData() async {
@@ -63,9 +70,15 @@ class _StatisticScreenState extends State<StatisticScreen> {
     });
   }
 
-  void _onChangedSkinDisease(value) {
+  void _onChangedDermatitis(value) {
     setState(() {
-      _isCheckedSkindisease = value;
+      _isCheckedDermatitis = value;
+    });
+  }
+
+  void _onChangedAsthma(value) {
+    setState(() {
+      _isCheckedAsthma = value;
     });
   }
 
@@ -82,7 +95,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _town = town.first;
     _isCheckedCold = false;
     _isCheckedEyedisease = false;
-    _isCheckedSkindisease = false;
+    _isCheckedDermatitis = false;
     _isCheckedFoodpoisoning = false;
     // loadData();
   }
@@ -146,8 +159,13 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       ),
                       DiseaseCheckBox(
                         name: "피부염",
-                        isChecked: _isCheckedSkindisease,
-                        onChanged: _onChangedSkinDisease,
+                        isChecked: _isCheckedDermatitis,
+                        onChanged: _onChangedDermatitis,
+                      ),
+                      DiseaseCheckBox(
+                        name: "천식",
+                        isChecked: _isCheckedAsthma,
+                        onChanged: _onChangedAsthma,
                       ),
                       DiseaseCheckBox(
                         name: "식중독",
