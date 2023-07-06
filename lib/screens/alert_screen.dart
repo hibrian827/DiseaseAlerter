@@ -10,47 +10,85 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
-  String dropdownValue = list.first;
+  String _dropdownValue = list.first;
+  final String _selectedDate = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-              "환자가 발생했나요?",
-              style: TextStyle(
-                fontSize: 30,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              const Text(
+                "환자가 발생했나요?",
+                style: TextStyle(
+                  fontSize: 30,
+                ),
               ),
-            ),
-            const Text("상황을 자세히 설명해줘서 추가해주세요!"),
-            const Text("당신의 노력이 다음 환자를 예방합니다"),
-            DropdownButton(
-              items: list.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "상황을 자세히 설명해주세요",
+              const Text("상황을 자세히 설명해줘서 추가해주세요!"),
+              const Text("당신의 노력이 다음 환자를 예방합니다"),
+              // 질병 선택
+              DropdownButton(
+                items: list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: _dropdownValue,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    _dropdownValue = value!;
+                  });
+                },
               ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.publish_sharp),
-            )
-          ],
-        ),
+              // 날짜 선택
+              // Row(
+              //   children: [
+              //     const Text(""),
+              //     const Text(""),
+              //     const Text(""),
+              //     IconButton(
+              //       onPressed: () {
+              //         _selectedDate = "";
+              //       },
+              //       icon: const Icon(Icons.date_range),
+              //     )
+              //   ],
+              // ),
+              // // 온도, 습도 입력
+              // const Row(
+              //   children: [
+              //     Row(
+              //       children: [
+              //         Text("온도 : "),
+              //         TextField(),
+              //       ],
+              //     ),
+              //     Row(
+              //       children: [
+              //         Text("습도 : "),
+              //         TextField(),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              // // 인원 수 입력
+              const Row(
+                children: [
+                  Text("감염 인원 : "),
+                  TextField(),
+                ],
+              ),
+              // 업로드 버튼
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.publish_sharp),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,4 @@
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 List<String> city = ["감기", "눈병", "피부", "식중독", "기타"];
 List<String> town = ["감기", "눈병", "피부", "식중독", "기타"];
@@ -8,14 +6,19 @@ List<String> diseases = ["감기", "눈병", "피부염", "천식"];
 // List<String> diseases = ["감기", "눈병", "피부염", "천식", "식중독"];
 
 class StatisticScreen extends StatefulWidget {
-  const StatisticScreen({super.key});
+  final Map<String, Map<String, List<List<dynamic>>>> data;
+
+  const StatisticScreen({
+    super.key,
+    required this.data,
+  });
 
   @override
   State<StatisticScreen> createState() => _StatisticScreenState();
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  late Map<String, Map<String, List<List<dynamic>>>> _data;
+  late final Map<String, Map<String, List<List<dynamic>>>> _data;
 
   late String _city;
   late String _town;
@@ -24,27 +27,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
   late bool _isCheckedDermatitis;
   late bool _isCheckedAsthma;
   late bool _isCheckedFoodpoisoning;
-
-  void _loadCSV() async {
-    _data = {};
-    for (int i = 0; i < diseases.length; i++) {
-      String disease = diseases[i];
-      Map<String, List<List<dynamic>>> temp = {};
-      List<String> type = ["시군구", "시도"];
-      for (int j = 0; j < type.length; j++) {
-        String rawData = await rootBundle
-            .loadString("assets/진료정보_${disease}_${type[j]}.csv");
-        List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
-        temp[type[j]] = listData;
-      }
-      _data[disease] = temp;
-    }
-  }
-
-  Future loadData() async {
-    _loadCSV();
-  }
 
   void _onChangedCity(String? value) {
     setState(() {
@@ -96,8 +78,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _isCheckedCold = false;
     _isCheckedEyedisease = false;
     _isCheckedDermatitis = false;
+    _isCheckedAsthma = false;
     _isCheckedFoodpoisoning = false;
-    // loadData();
+    _data = widget.data;
   }
 
   @override
@@ -202,7 +185,7 @@ class DiseaseCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         Checkbox(
           value: isChecked,

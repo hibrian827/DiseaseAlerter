@@ -1,43 +1,84 @@
-import 'package:flutter/material.dart';
+import 'package:csv/csv.dart';
 import 'package:disease_alerter/screens/alert_screen.dart';
-import 'package:disease_alerter/screens/statistic_screen.dart';
 import 'package:disease_alerter/screens/hospital_screen.dart';
+import 'package:disease_alerter/screens/statistic_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class MainScreen extends StatelessWidget {
+List<String> diseases = ["감기", "눈병", "피부염", "천식"];
+// List<String> diseases = ["감기", "눈병", "피부염", "천식", "식중독"];
+
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  Future _loadData() async {
+    Map<String, Map<String, List<List<dynamic>>>> data;
+    data = {};
+    for (int i = 0; i < diseases.length; i++) {
+      String disease = diseases[i];
+      Map<String, List<List<dynamic>>> map = {};
+      String rawData;
+      List<List<dynamic>> listData;
+      List<String> type = ["시군구", "시도"];
+      for (int j = 0; j < type.length; j++) {
+        rawData = await rootBundle
+            .loadString("assets/진료정보_${disease}_${type[j]}.csv");
+        listData = const CsvToListConverter().convert(rawData);
+        map[type[j]] = listData;
+      }
+      data[disease] = map;
+    }
+    return data;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: const <Widget>[
-              MainTab(icon: Icons.bar_chart),
-              MainTab(icon: Icons.notification_add),
-              MainTab(icon: Icons.local_hospital),
-            ],
-            labelColor: Theme.of(context).splashColor,
-            unselectedLabelColor: Theme.of(context).primaryColorLight,
-            onTap: (index) {
-              FocusScopeNode currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus) {
-                currentFocus.unfocus();
-              }
-            },
-          ),
-          elevation: 0,
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-        body: const TabBarView(
-          children: [
-            StatisticScreen(),
-            AlertScreen(),
-            HospitalScreen(),
-          ],
-        ),
-      ),
+    return FutureBuilder(
+      future: _loadData(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                bottom: TabBar(
+                  tabs: const <Widget>[
+                    MainTab(icon: Icons.bar_chart),
+                    MainTab(icon: Icons.notification_add),
+                    MainTab(icon: Icons.local_hospital),
+                  ],
+                  labelColor: Theme.of(context).splashColor,
+                  unselectedLabelColor: Theme.of(context).primaryColorLight,
+                  onTap: (index) {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
+                  },
+                ),
+                elevation: 0,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              body: TabBarView(
+                children: [
+                  StatisticScreen(data: snapshot.data),
+                  const AlertScreen(),
+                  const HospitalScreen(),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
