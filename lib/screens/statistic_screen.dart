@@ -357,6 +357,18 @@ class _StatisticScreenState extends State<StatisticScreen> {
     });
   }
 
+  List<Widget> getRadioBtns() {
+    List<Widget> radioBtns = [];
+    for (Diseases disease in diseasesKOR.keys) {
+      radioBtns.add(DiseaseRadioButton(
+        name: disease,
+        selected: _selectedDisease!,
+        onChanged: _onChangedDisease,
+      ));
+    }
+    return radioBtns;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -414,13 +426,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       ],
                     ),
                     Row(
-                      children: [
-                        DiseaseRadioButton(
-                          name: Diseases.cold,
-                          selected: _selectedDisease!,
-                          onChanged: _onChangedDisease,
-                        ),
-                      ],
+                      children: getRadioBtns(),
                     ),
                   ],
                 ),
