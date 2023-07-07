@@ -1,4 +1,5 @@
 import 'package:csv/csv.dart';
+import 'package:disease_alerter/models/disease_model.dart';
 import 'package:disease_alerter/screens/alert_screen.dart';
 import 'package:disease_alerter/screens/hospital_screen.dart';
 import 'package:disease_alerter/screens/statistic_screen.dart';
@@ -17,19 +18,32 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Future _loadData() async {
-    Map<String, Map<String, List<List<dynamic>>>> data;
-    data = {};
+    Map<String, Map<int, List<DiseaseModel>>> data = {};
     for (int i = 0; i < diseases.length; i++) {
       String disease = diseases[i];
-      Map<String, List<List<dynamic>>> map = {};
+      Map<int, List<DiseaseModel>> map = {};
       String rawData;
-      List<List<dynamic>> listData;
+      List<dynamic> listData;
       List<String> type = ["시군구", "시도"];
       for (int j = 0; j < type.length; j++) {
         rawData = await rootBundle
             .loadString("assets/진료정보_${disease}_${type[j]}.csv");
         listData = const CsvToListConverter().convert(rawData);
-        map[type[j]] = listData;
+        for (var data in listData) {
+          List<String> date = data[0]?.split("-");
+          int year = int.parse(date[0]);
+          int month = int.parse(date[1]);
+          int day = int.parse(date[2]);
+          int location = data[1];
+          int status = data[2];
+          DiseaseModel diseaseModel =
+              DiseaseModel(disease, year, month, day, location, status);
+          if (map.containsKey(location)) {
+            map[location]?.add(diseaseModel);
+          } else {
+            map[location] = [diseaseModel];
+          }
+        }
       }
       data[disease] = map;
     }
