@@ -93,13 +93,13 @@ class MilitaryHospital extends StatelessWidget {
           Text(
             location,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             contact,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
         ],

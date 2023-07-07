@@ -357,18 +357,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
     });
   }
 
-  List<Widget> getRadioBtns() {
-    List<Widget> radioBtns = [];
-    for (Diseases disease in diseasesKOR.keys) {
-      radioBtns.add(DiseaseRadioButton(
-        name: disease,
-        selected: _selectedDisease!,
-        onChanged: _onChangedDisease,
-      ));
-    }
-    return radioBtns;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -381,93 +369,64 @@ class _StatisticScreenState extends State<StatisticScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: DropdownButton(
-                            value: _city,
-                            items: location.keys
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: _onChangedCity,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: DropdownButton(
-                            value: _town,
-                            items: location[_city]
-                                ?.keys
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: _onChangedTown,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: getRadioBtns(),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.search),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DiseaseRadioButton extends StatelessWidget {
-  final Diseases name;
-  final Diseases selected;
-  final void Function(Diseases?)? onChanged;
-
-  const DiseaseRadioButton({
-    super.key,
-    required this.name,
-    required this.selected,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(diseasesKOR[name]!),
-          leading: Radio<Diseases?>(
-            value: name,
-            groupValue: selected,
-            onChanged: onChanged,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
           ),
-        ),
-      ],
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButton(
+                  value: _city,
+                  items: location.keys
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: _onChangedCity,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButton(
+                  value: _town,
+                  items: location[_city]
+                      ?.keys
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: _onChangedTown,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButton(
+                  value: diseasesKOR[_selectedDisease],
+                  items: diseasesKOR.values
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: _onChangedTown,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.search),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
