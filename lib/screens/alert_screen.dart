@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-List<String> list = ["감기", "눈병", "피부병", "식중독", "기타"];
-
 class AlertScreen extends StatefulWidget {
   const AlertScreen({super.key});
 
@@ -10,7 +8,6 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
-  String _dropdownValue = list.first;
   final String _selectedDate = "";
 
   @override
@@ -29,19 +26,11 @@ class _AlertScreenState extends State<AlertScreen> {
               ),
               const Text("상황을 자세히 설명해줘서 추가해주세요!"),
               const Text("당신의 노력이 다음 환자를 예방합니다"),
-              // 질병 선택
-              DropdownButton(
-                items: list.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: _dropdownValue,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? value) {
-                  setState(() {
-                    _dropdownValue = value!;
-                  });
-                },
+              // 질병 입력
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "질병 이름",
+                ),
               ),
               // 날짜 선택
               // Row(
@@ -84,7 +73,7 @@ class _AlertScreenState extends State<AlertScreen> {
               // 업로드 버튼
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.publish_sharp),
+                icon: const Icon(Icons.add),
               )
             ],
           ),

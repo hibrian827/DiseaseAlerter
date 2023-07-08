@@ -54,6 +54,15 @@ class _HospitalScreenState extends State<HospitalScreen> {
                     ),
                   ),
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 30),
+                  child: Text(
+                    "출처 : 국군의무사령부 (국방부 공공데이터포털)",
+                    style: TextStyle(
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
                 Column(
                   children: getHospitals(),
                 )
