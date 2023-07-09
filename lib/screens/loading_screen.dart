@@ -54,15 +54,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
         data["식중독"]![year]![month] = 0;
       }
     }
-    for (int year = 2018; year <= 2022; year++) {
-      String rawData =
-          await rootBundle.loadString("assets/지역별_월별_식중독_통계_$year.csv");
-      final listDatas = const CsvToListConverter().convert(rawData);
-      for (var list in listDatas) {
-        print(list[0]);
-      }
-    }
-    print(data["식중독"]);
+    // for (int year = 2018; year <= 2022; year++) {
+    //   String rawData =
+    //       await rootBundle.loadString("assets/지역별_월별_식중독_통계_$year.csv");
+    //   List<List<dynamic>> listDatas =
+    //       const CsvToListConverter(eol: "\n").convert(rawData);
+    //   print(listDatas);
+    // }
+    // print(data["식중독"]);
     return data;
   }
 

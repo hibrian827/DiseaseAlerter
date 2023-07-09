@@ -27,11 +27,11 @@ class _AlertScreenState extends State<AlertScreen> {
               const Text("상황을 자세히 설명해줘서 추가해주세요!"),
               const Text("당신의 노력이 다음 환자를 예방합니다"),
               // 질병 입력
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: "질병 이름",
-                ),
-              ),
+              // const TextField(
+              //   decoration: InputDecoration(
+              //     hintText: "질병 이름",
+              //   ),
+              // ),
               // 날짜 선택
               // Row(
               //   children: [
@@ -64,12 +64,12 @@ class _AlertScreenState extends State<AlertScreen> {
               //   ],
               // ),
               // // 인원 수 입력
-              const Row(
-                children: [
-                  Text("감염 인원 : "),
-                  TextField(),
-                ],
-              ),
+              // const Row(
+              //   children: [
+              //     Text("감염 인원 : "),
+              //     TextField(),
+              //   ],
+              // ),
               // 업로드 버튼
               IconButton(
                 onPressed: () {},
