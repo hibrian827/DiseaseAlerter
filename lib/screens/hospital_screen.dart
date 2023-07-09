@@ -45,26 +45,38 @@ class _HospitalScreenState extends State<HospitalScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 30),
-                  child: Text(
-                    "국군 병원",
-                    style: TextStyle(
-                      fontSize: 35,
-                    ),
+                const SizedBox(
+                  height: 70,
+                ),
+                const Text(
+                  "국군 병원",
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 30),
-                  child: Text(
-                    "출처 : 국군의무사령부 (국방부 공공데이터포털)",
-                    style: TextStyle(
-                      fontSize: 10,
-                    ),
+                const Text(
+                  "출처 : 국군의무사령부 (국방부 공공데이터포털)",
+                  style: TextStyle(
+                    fontSize: 10,
                   ),
+                ),
+                const SizedBox(
+                  height: 40,
                 ),
                 Column(
                   children: getHospitals(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("돌아가기"),
+                  ),
                 )
               ],
             ),

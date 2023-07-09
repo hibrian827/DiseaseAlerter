@@ -8,16 +8,16 @@ Map<Diseases, String> diseasesKOR = {
   Diseases.eyeDisease: "눈병",
   Diseases.dermatitis: "피부염",
   Diseases.asthma: "천식",
-  Diseases.foodPoisoning: "식중독",
+  // Diseases.foodPoisoning: "식중독",
 };
 
 String commonStatisticSource = "국민건강보험공단 (공공데이터포털-국가중점데이터)";
-Map<Diseases, String> source = {
-  Diseases.cold: commonStatisticSource,
-  Diseases.eyeDisease: commonStatisticSource,
-  Diseases.dermatitis: commonStatisticSource,
-  Diseases.asthma: commonStatisticSource,
-  Diseases.foodPoisoning: "식품의약품안전처 (공공데이터포털)",
+Map<String, String> source = {
+  "감기": commonStatisticSource,
+  "눈병": commonStatisticSource,
+  "피부염": commonStatisticSource,
+  "천식": commonStatisticSource,
+  // "식중독": "식품의약품안전처 (공공데이터포털)",
 };
 
 class StatisticScreen extends StatefulWidget {
@@ -35,9 +35,20 @@ class StatisticScreen extends StatefulWidget {
 class _StatisticScreenState extends State<StatisticScreen> {
   late Map<String, Map<int, Map<int, int>>> _data;
   late Map<int, int> _specificData;
+  late int _year;
   late String _disease;
+  final Color selectedTitleColor = Colors.blue;
+  final Color selectedBarColor = Colors.cyan;
+  final Color unselectedTitleColor = Colors.grey;
+  final Color unselectedBarColor = Colors.grey;
+  final Color subTitleColor = Colors.purple;
+  final Color subBarColor = Colors.deepPurple;
 
-  BarTouchData get barTouchData => BarTouchData(
+  // 공통 그래프 함수
+  FlBorderData get borderData => FlBorderData(show: false);
+
+  // 년도별 그래프 함수
+  BarTouchData get barTouchDataYear => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
@@ -51,9 +62,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
           ) {
             return BarTooltipItem(
               rod.toY.round().toString(),
-              const TextStyle(
-                color: Colors.cyan,
-                fontSize: 10,
+              TextStyle(
+                color: _year == _specificData.keys.toList()[groupIndex]
+                    ? selectedBarColor
+                    : unselectedBarColor,
+                fontSize: 8,
                 fontWeight: FontWeight.bold,
               ),
             );
@@ -61,26 +74,33 @@ class _StatisticScreenState extends State<StatisticScreen> {
         ),
       );
 
-  Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.blue,
+  Widget getTitlesYear(double value, TitleMeta meta) {
+    TextStyle style = TextStyle(
+      color: _year == value.toInt() ? selectedTitleColor : unselectedTitleColor,
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
-      child: Text(value.toInt().toString(), style: style),
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            _year = value.toInt();
+          });
+        },
+        child: Text(value.toInt().toString(), style: style),
+      ),
     );
   }
 
-  FlTitlesData get titlesData => FlTitlesData(
+  FlTitlesData get titlesDataYear => FlTitlesData(
         show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: getTitles,
+            reservedSize: 40,
+            getTitlesWidget: getTitlesYear,
           ),
         ),
         leftTitles: const AxisTitles(
@@ -94,19 +114,99 @@ class _StatisticScreenState extends State<StatisticScreen> {
         ),
       );
 
-  List<BarChartGroupData> barGroups() {
+  List<BarChartGroupData> barGroupsYear() {
     List<BarChartGroupData> grps = [];
     for (int year in _specificData.keys) {
       grps.add(BarChartGroupData(
         x: year,
-        barRods: [BarChartRodData(toY: _specificData[year]!.toDouble())],
+        barRods: [
+          BarChartRodData(
+            toY: _specificData[year]!.toDouble(),
+            color: _year == year ? selectedBarColor : unselectedBarColor,
+          )
+        ],
         showingTooltipIndicators: [0],
       ));
     }
     return grps;
   }
 
-  FlBorderData get borderData => FlBorderData(show: false);
+  // 월별 그래프 용 함수
+  BarTouchData get barTouchDataMonth => BarTouchData(
+        enabled: false,
+        touchTooltipData: BarTouchTooltipData(
+          tooltipBgColor: Colors.transparent,
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 8,
+          getTooltipItem: (
+            BarChartGroupData group,
+            int groupIndex,
+            BarChartRodData rod,
+            int rodIndex,
+          ) {
+            return BarTooltipItem(
+              rod.toY.round().toString(),
+              TextStyle(
+                color: subBarColor,
+                fontSize: 7,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+      );
+
+  Widget getTitlesMonth(double value, TitleMeta meta) {
+    TextStyle style = TextStyle(
+      color: subTitleColor,
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 4,
+      child: Text(value.toInt().toString(), style: style),
+    );
+  }
+
+  FlTitlesData get titlesDataMonth => FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: getTitlesMonth,
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      );
+
+  List<BarChartGroupData> barGroupsMonth() {
+    List<BarChartGroupData> grps = [];
+    for (int month = 1; month <= 12; month++) {
+      grps.add(BarChartGroupData(
+        x: month,
+        barRods: [
+          BarChartRodData(
+            toY: _data[_disease]![_year]![month]!.toDouble(),
+            color: subBarColor,
+          )
+        ],
+        showingTooltipIndicators: [0],
+      ));
+    }
+    return grps;
+  }
+
+  // build
 
   void setSpecificData() {
     _specificData = {};
@@ -124,6 +224,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     super.initState();
     _data = widget.data;
     _disease = diseasesKOR.values.first;
+    _year = _data[_disease]!.keys.first;
     setSpecificData();
   }
 
@@ -156,22 +257,43 @@ class _StatisticScreenState extends State<StatisticScreen> {
           }).toList(),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 50,
-            horizontal: 30,
-          ),
+          padding: const EdgeInsets.fromLTRB(15, 50, 15, 80),
           child: SizedBox(
-            height: 400,
+            height: 200,
             child: BarChart(
               BarChartData(
-                barTouchData: barTouchData,
-                titlesData: titlesData,
+                barTouchData: barTouchDataYear,
+                titlesData: titlesDataYear,
                 borderData: borderData,
-                barGroups: barGroups(),
+                barGroups: barGroupsYear(),
                 gridData: const FlGridData(show: false),
                 alignment: BarChartAlignment.spaceAround,
               ),
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+          ),
+          child: SizedBox(
+            height: 200,
+            child: BarChart(
+              BarChartData(
+                barTouchData: barTouchDataMonth,
+                titlesData: titlesDataMonth,
+                borderData: borderData,
+                barGroups: barGroupsMonth(),
+                gridData: const FlGridData(show: false),
+                alignment: BarChartAlignment.spaceAround,
+              ),
+            ),
+          ),
+        ),
+        Text(
+          "출처 : ${source[_disease]}",
+          style: const TextStyle(
+            fontSize: 12,
           ),
         ),
       ],

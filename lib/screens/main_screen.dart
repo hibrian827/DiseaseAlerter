@@ -1,4 +1,5 @@
 import 'package:disease_alerter/screens/alert_screen.dart';
+import 'package:disease_alerter/screens/info_screen.dart';
 import 'package:disease_alerter/screens/statistic_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class MainScreen extends StatelessWidget {
               data: data,
             ),
             const AlertScreen(),
-            const Center(),
+            const InfoScreen(),
           ],
         ),
       ),

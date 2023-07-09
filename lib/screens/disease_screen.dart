@@ -1,48 +1,88 @@
 import 'package:flutter/material.dart';
 
-String commonInfoSource = "질병관리청 (국가건강정보포털-질병관리청 국가건강정보포털)";
-
-class DiseaseScreen extends StatefulWidget {
+class DiseaseScreen extends StatelessWidget {
   final String name;
   final String infoSource;
-  final String url;
-  final String statisticSource;
+  final Map<String, List<String>> info;
 
   const DiseaseScreen({
     super.key,
     required this.name,
     required this.infoSource,
-    required this.url,
-    required this.statisticSource,
+    required this.info,
   });
 
-  @override
-  State<DiseaseScreen> createState() => _DiseaseScreenState();
-}
+  List<Widget> getDetails(String name) {
+    List<Widget> details = [];
+    for (String detail in info[name]!) {
+      details.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text(detail),
+      ));
+    }
+    return details;
+  }
 
-class _DiseaseScreenState extends State<DiseaseScreen> {
-  late String _name;
-  late String _infoSource;
-  late String _url;
-  late String _statisticSource;
-
-  @override
-  void initState() {
-    super.initState();
-    _name = widget.name;
-    _infoSource = widget.infoSource;
-    _url = widget.url;
-    _statisticSource = widget.statisticSource;
+  List<Widget> getInfos() {
+    List<Widget> infos = [];
+    for (String name in info.keys) {
+      infos.add(const SizedBox(
+        height: 35,
+      ));
+      infos.add(Text(
+        name,
+        style: const TextStyle(
+          fontSize: 25,
+        ),
+      ));
+      infos += getDetails(name);
+    }
+    return infos;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Text(_name),
-          Text(_infoSource),
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+          ),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 70,
+              ),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                "출처 : $infoSource",
+                style: const TextStyle(
+                  fontSize: 11,
+                ),
+              ),
+              Column(
+                children: getInfos(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("돌아가기"),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
