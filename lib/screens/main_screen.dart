@@ -1,5 +1,6 @@
 import 'package:disease_alerter/screens/alert_screen.dart';
 import 'package:disease_alerter/screens/info_screen.dart';
+import 'package:disease_alerter/screens/login_screen.dart';
 import 'package:disease_alerter/screens/statistic_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,17 @@ class MainScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LogInScreen(),
+                ),
+              );
+            },
+          ),
           bottom: TabBar(
             tabs: const <Widget>[
               Icon(Icons.bar_chart),
@@ -25,12 +37,6 @@ class MainScreen extends StatelessWidget {
             ],
             labelColor: Theme.of(context).splashColor,
             unselectedLabelColor: Theme.of(context).primaryColorLight,
-            onTap: (index) {
-              FocusScopeNode currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus) {
-                currentFocus.unfocus();
-              }
-            },
           ),
           elevation: 0,
           backgroundColor: Theme.of(context).primaryColor,

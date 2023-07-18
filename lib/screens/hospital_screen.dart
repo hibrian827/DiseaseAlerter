@@ -38,6 +38,15 @@ class _HospitalScreenState extends State<HospitalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -67,15 +76,9 @@ class _HospitalScreenState extends State<HospitalScreen> {
                 Column(
                   children: getHospitals(),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
+                const Padding(
+                  padding: EdgeInsets.symmetric(
                     vertical: 20,
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("돌아가기"),
                   ),
                 )
               ],

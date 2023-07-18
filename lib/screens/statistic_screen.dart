@@ -225,17 +225,19 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _data = widget.data;
     _disease = diseasesKOR.values.first;
     _year = _data[_disease]!.keys.first;
+
     setSpecificData();
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
         const SizedBox(height: 40),
         DropdownButton<String>(
           value: _disease,
-          icon: const Icon(Icons.arrow_downward),
+          icon: const Icon(Icons.arrow_drop_down),
           elevation: 16,
           style: const TextStyle(color: Colors.deepPurple),
           underline: Container(
@@ -257,9 +259,10 @@ class _StatisticScreenState extends State<StatisticScreen> {
           }).toList(),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(15, 50, 15, 80),
+          padding: EdgeInsets.fromLTRB(
+              15, screenHeight * 0.05, 15, screenHeight * 0.02),
           child: SizedBox(
-            height: 200,
+            height: screenHeight * 0.25,
             child: BarChart(
               BarChartData(
                 barTouchData: barTouchDataYear,
@@ -272,12 +275,16 @@ class _StatisticScreenState extends State<StatisticScreen> {
             ),
           ),
         ),
+        const Text("연도를 눌러 월별 그래프를 알아보세요!"),
+        SizedBox(
+          height: screenHeight * 0.04,
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 15,
           ),
           child: SizedBox(
-            height: 200,
+            height: MediaQuery.of(context).size.height * 0.25,
             child: BarChart(
               BarChartData(
                 barTouchData: barTouchDataMonth,
@@ -293,7 +300,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
         Text(
           "출처 : ${source[_disease]}",
           style: const TextStyle(
-            fontSize: 12,
+            fontSize: 10,
           ),
         ),
       ],

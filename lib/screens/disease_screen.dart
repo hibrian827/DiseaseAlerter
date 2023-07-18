@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DiseaseScreen extends StatelessWidget {
   final String name;
   final String infoSource;
-  final Map<String, List<String>> info;
+  final Map<String, Map<String, List<String>>> info;
 
   const DiseaseScreen({
     super.key,
@@ -14,11 +14,25 @@ class DiseaseScreen extends StatelessWidget {
 
   List<Widget> getDetails(String name) {
     List<Widget> details = [];
-    for (String detail in info[name]!) {
-      details.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text(detail),
-      ));
+    for (String category in info[name]!.keys) {
+      if (category != "") {
+        details.add(const SizedBox(
+          height: 20,
+        ));
+        details.add(Text(
+          category,
+          style: const TextStyle(fontSize: 18),
+        ));
+      }
+      for (String detail in info[name]![category]!) {
+        details.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            detail,
+            style: const TextStyle(fontSize: 15),
+          ),
+        ));
+      }
     }
     return details;
   }
@@ -30,7 +44,7 @@ class DiseaseScreen extends StatelessWidget {
         height: 35,
       ));
       infos.add(Text(
-        name,
+        "- $name -",
         style: const TextStyle(
           fontSize: 25,
         ),
@@ -43,6 +57,15 @@ class DiseaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -68,17 +91,6 @@ class DiseaseScreen extends StatelessWidget {
               ),
               Column(
                 children: getInfos(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("돌아가기"),
-                ),
               ),
             ],
           ),

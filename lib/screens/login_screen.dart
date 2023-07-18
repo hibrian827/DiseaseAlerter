@@ -1,5 +1,6 @@
 import 'package:disease_alerter/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Map<String, Map<String, int>> location = {
   "서울": {
@@ -335,12 +336,19 @@ class _LogInScreenState extends State<LogInScreen> {
     });
   }
 
-  void onPressSave() {
+  void saveLocation(int code) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt("location", code);
+  }
+
+  void onPressSave() async {
+    int locationCode = location[_city]![_town]!;
+    saveLocation(locationCode);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => LoadingScreen(
-          location: location[_city]![_town]!,
+          location: locationCode,
         ),
       ),
     );
@@ -386,7 +394,9 @@ class _LogInScreenState extends State<LogInScreen> {
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(
+                        value,
+                      ),
                     );
                   }).toList(),
                   onChanged: _onChangedTown,
@@ -396,7 +406,9 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           TextButton(
             onPressed: onPressSave,
-            child: const Text("저장하기"),
+            child: const Text(
+              "저장하기",
+            ),
           ),
         ],
       ),
