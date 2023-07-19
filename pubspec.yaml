@@ -34,6 +34,7 @@ dependencies:
   excel: 2.1.0
   fl_chart: ^0.63.0
   shared_preferences: ^2.2.0
+  change_app_package_name: 1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
