@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
 
   Future checkSaved() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getInt("location");
+    return pref.getInt("location") ?? 0;
   }
 
   @override
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            if (snapshot.data == null) {
+            if (snapshot.data == 0) {
               return const LogInScreen();
             } else {
               return LoadingScreen(location: snapshot.data);

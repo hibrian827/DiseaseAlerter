@@ -13,7 +13,7 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '2'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
@@ -32,7 +32,7 @@ if(keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.example.disease_alerter"
+    namespace "com.national_defense_public_data.roka_vac"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
